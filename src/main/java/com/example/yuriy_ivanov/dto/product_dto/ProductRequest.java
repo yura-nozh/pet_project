@@ -1,13 +1,14 @@
-package com.example.yuriy_ivanov.dto.BagsDto;
+package com.example.yuriy_ivanov.dto.product_dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BagRequest {
+public class ProductRequest {
     private String brand;
     private String type;
     private Integer volume;
-    private Integer quantity;
+    private Integer count;
+    private Float price;
 }

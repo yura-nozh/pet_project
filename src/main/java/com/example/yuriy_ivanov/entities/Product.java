@@ -8,8 +8,8 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(schema = "public", name = "bags")
-public class Bag {
+@Table(schema = "public", name = "products")
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,10 @@ public class Bag {
     @Column(nullable = false)
     private Integer volume;
 
-    private Integer quantity;
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private Integer count;
+
+    @Column(columnDefinition = "integer default 0")
+    private Float price;
 
 }

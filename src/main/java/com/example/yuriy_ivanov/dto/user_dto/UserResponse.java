@@ -1,4 +1,4 @@
-package com.example.yuriy_ivanov.dto.UserDto;
+package com.example.yuriy_ivanov.dto.user_dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.services;
 
-import com.example.yuriy_ivanov.dto.UserDto.UserRequest;
-import com.example.yuriy_ivanov.dto.UserDto.UserResponse;
+import com.example.yuriy_ivanov.dto.user_dto.UserRequest;
+import com.example.yuriy_ivanov.dto.user_dto.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

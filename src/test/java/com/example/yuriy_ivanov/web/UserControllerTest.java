@@ -1,9 +1,9 @@
 package com.example.yuriy_ivanov.web;
 
+import com.example.yuriy_ivanov.dto.user_dto.UserRequest;
 import com.example.yuriy_ivanov.dto.user_dto.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.repositories.UserRepository;
-import com.example.yuriy_ivanov.services.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,10 +35,14 @@ public class UserControllerTest {
     MockMvc mockMvc;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     UserRepository userRepository;
+
+    @AfterEach
+    public void resetDB() {
+        userRepository.deleteAll();
+    }
+
+//    @Sql(statements = "ALTER TABLE role AUTO_INCREMENT = 0")
 
     public User createUser(String firstName, String lastName, String email, String password) {
         User user = new User();
@@ -53,16 +56,10 @@ public class UserControllerTest {
         return user;
     }
 
-    @AfterEach
-    public void resetDB() {
-        userRepository.deleteAll();
-    }
-
-    public void assertUserEquals(User firstUser, User secondUser) {
+    public void assertUserEquals(UserResponse firstUser, User secondUser) {
         assertEquals(firstUser.getFirstName(), secondUser.getFirstName());
         assertEquals(firstUser.getLastName(), secondUser.getLastName());
         assertEquals(firstUser.getEmail(), secondUser.getEmail());
-        assertEquals(1, firstUser.getId());
     }
 
     @Test
@@ -78,74 +75,74 @@ public class UserControllerTest {
 
     @Test
     public void shouldReturnUserById() throws Exception {
-        createUser("John", "Doe", "dr1@mail.com", "qwerty");
-        ResultActions resultActions = this.mockMvc.perform(get("/users/1"));
+        User user = createUser("John", "Doe", "dr1@mail.com", "qwerty");
+        ResultActions resultActions = this.mockMvc.perform(get("/users/" + user.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();
         UserResponse userResponse = objectMapper.readValue(result, new TypeReference<> () {});
 
         resultActions.andExpect(status().isOk());
 
-        assertEquals(1, userResponse.getId());
+        assertUserEquals(userResponse, user);
     }
 
     @Test
     public void shouldCreateUser() throws Exception {
-        List<User> usersBefore = userRepository.findAll();
+        List<User> listBefore = userRepository.findAll();
         User testUser = new User();
         testUser.setFirstName("John");
         testUser.setLastName("Doe");
         testUser.setEmail("dr1@mail.com");
         testUser.setPassword("qwerty");
 
-        assertEquals(0, usersBefore.size());
+        assertEquals(0, listBefore.size());
 
         MockHttpServletRequestBuilder requestBuilder = post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser));
         ResultActions resultActions = this.mockMvc.perform(requestBuilder);
         String result = resultActions.andReturn().getResponse().getContentAsString();
-        User newUser = objectMapper.readValue(result, new TypeReference<>() {});
-        List<User> userAfter = userRepository.findAll();
+        UserResponse newUser = objectMapper.readValue(result, new TypeReference<>() {});
+        List<User> listAfter = userRepository.findAll();
 
         resultActions.andExpect(status().isOk());
 
         assertNotNull(result);
         assertUserEquals(newUser, testUser);
 
-        assertEquals(1, userAfter.size());
+        assertEquals(1, listAfter.size());
     }
 
     @Test
     public void shouldUpdateUser() throws Exception {
-        createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
+        User user = createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
         User testUser = new User();
         testUser.setFirstName("John2");
         testUser.setLastName("Doe2");
         testUser.setEmail("dr2@mail.com");
         testUser.setPassword("qwerty2");
-        List<User> usersBefore = userRepository.findAll();
+        List<User> listBefore = userRepository.findAll();
 
-        MockHttpServletRequestBuilder requestBuilder = put("/users/1")
+        MockHttpServletRequestBuilder requestBuilder = put("/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser));
         ResultActions resultActions = this.mockMvc.perform(requestBuilder);
         String result = resultActions.andReturn().getResponse().getContentAsString();
-        User updateUser = objectMapper.readValue(result, new TypeReference<>() {});
-        List<User> userAfter = userRepository.findAll();
+        UserResponse updateUser = objectMapper.readValue(result, new TypeReference<>() {});
+        List<User> listAfter = userRepository.findAll();
 
         resultActions.andExpect(status().isOk());
 
         assertNotNull(result);
         assertUserEquals(updateUser, testUser);
 
-        assertEquals(usersBefore.size(), userAfter.size());
+        assertEquals(listBefore.size(), listAfter.size());
     }
 
     @Test
     public void shouldDeleteUser() throws Exception {
-        createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
+        User user = createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
 
-        ResultActions resultActions = this.mockMvc.perform(delete("/users/1"));
+        ResultActions resultActions = this.mockMvc.perform(delete("/users/" + user.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();
         List<User> listAfter = userRepository.findAll();
 
@@ -156,5 +153,4 @@ public class UserControllerTest {
 
         assertEquals(0, listAfter.size());
     }
-
 }

@@ -1,11 +1,15 @@
 package com.example.yuriy_ivanov.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 @Table(schema = "public", name = "line_items")
 @Data
 public class LineItem {

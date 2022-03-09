@@ -1,12 +1,14 @@
 package com.example.yuriy_ivanov.entities;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 @Table(schema = "public", name = "carts")
 public class Cart {
 

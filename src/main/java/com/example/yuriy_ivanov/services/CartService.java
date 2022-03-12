@@ -128,7 +128,7 @@ public class CartService {
         LineItem lineItem = findLineItem(lineItems, product);
 
         Integer quantity = lineItem.getQuantity();
-        if(quantity > 1) {
+        if(quantity != null && quantity > 1) {
             lineItem.setQuantity(quantity - 1);
         } else {
             lineItems.remove(lineItem);

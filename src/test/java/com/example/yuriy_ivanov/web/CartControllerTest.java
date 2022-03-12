@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,11 +64,11 @@ public class CartControllerTest {
         return product;
     }
 
-    public User createUser() {
+    public User createUser(String email) {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Due");
-        user.setEmail("mail@mail.com");
+        user.setEmail(email);
         user.setPassword("qwerty");
 
         userRepository.saveAndFlush(user);
@@ -93,8 +94,8 @@ public class CartControllerTest {
     @Test
     public void shouldAddNewItem() throws Exception {
         Product product = createProduct();
-        User user = createUser();
-        CartRequest cartRequest = new CartRequest(1l, 1l);
+        User user = createUser("test@mail.tt");
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
         MockHttpServletRequestBuilder requestBuilder = post("/cart/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest));
@@ -109,12 +110,13 @@ public class CartControllerTest {
     }
 
     @Test
+    @Transactional
     public void shouldRemoveItem() throws Exception {
         Product product = createProduct();
-        User user = createUser();
+        User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);
 
-        CartRequest cartRequest = new CartRequest(1l, 1l);
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
 
         MockHttpServletRequestBuilder requestBuilder3 = post("/cart/remove")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -127,6 +129,7 @@ public class CartControllerTest {
 
         resultActions3.andExpect(status().isOk());
         assertNotNull(list.size());
+        assertEquals((cart.getLineItems().size() - 1), list.size());
 
         assertEquals(1, list.size());
     }

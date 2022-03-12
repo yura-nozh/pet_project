@@ -8,14 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Config {
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        return new ObjectMapper();
-//    }
-//
-//    @Bean
-//    public Converter converter(ObjectMapper objectMapper) {
-//       return new Converter(objectMapper);
-//    }
+    @Bean
+    public Converter converter(ObjectMapper objectMapper) {
+       return new Converter(objectMapper);
+    }
 
 }

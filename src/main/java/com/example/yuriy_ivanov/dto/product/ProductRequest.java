@@ -1,4 +1,4 @@
-package com.example.yuriy_ivanov.dto.product_dto;
+package com.example.yuriy_ivanov.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

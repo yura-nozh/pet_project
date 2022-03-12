@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.web;
 
-import com.example.yuriy_ivanov.dto.product_dto.ProductRequest;
-import com.example.yuriy_ivanov.dto.product_dto.ProductResponse;
+import com.example.yuriy_ivanov.dto.product.ProductRequest;
+import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

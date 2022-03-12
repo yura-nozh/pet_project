@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.services;
 
-import com.example.yuriy_ivanov.dto.product_dto.ProductRequest;
-import com.example.yuriy_ivanov.dto.product_dto.ProductResponse;
+import com.example.yuriy_ivanov.dto.product.ProductRequest;
+import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
+    private final Converter converter;
+
+//    @PostConstruct
+//    public void init() {
+//        System.out.println();
+//    }
 
     public List<ProductResponse> all(Pageable pageable){
         List<ProductResponse> bags = new ArrayList<>();

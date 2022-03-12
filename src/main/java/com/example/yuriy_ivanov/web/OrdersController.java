@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.web;
 
-import com.example.yuriy_ivanov.dto.order_dto.OrderRequest;
-import com.example.yuriy_ivanov.dto.order_dto.OrderResponse;
+import com.example.yuriy_ivanov.dto.order.OrderRequest;
+import com.example.yuriy_ivanov.dto.order.OrderResponse;
 import com.example.yuriy_ivanov.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

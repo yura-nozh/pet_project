@@ -1,17 +1,15 @@
 package com.example.yuriy_ivanov.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Data
 @NoArgsConstructor
 @Table(schema = "public", name = "line_items")
-@Data
 public class LineItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +17,12 @@ public class LineItem {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     @ManyToOne

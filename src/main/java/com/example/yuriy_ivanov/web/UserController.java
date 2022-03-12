@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.web;
 
-import com.example.yuriy_ivanov.dto.user_dto.UserRequest;
-import com.example.yuriy_ivanov.dto.user_dto.UserResponse;
+import com.example.yuriy_ivanov.dto.user.UserRequest;
+import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

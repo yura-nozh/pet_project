@@ -1,11 +1,10 @@
-package com.example.yuriy_ivanov.dto.cart_dto;
+package com.example.yuriy_ivanov.dto.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CartRequest {
-    private Long productId;
+public class OrderRequest {
     private Long userId;
 }

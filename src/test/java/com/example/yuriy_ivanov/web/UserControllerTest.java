@@ -1,7 +1,6 @@
 package com.example.yuriy_ivanov.web;
 
-import com.example.yuriy_ivanov.dto.user_dto.UserRequest;
-import com.example.yuriy_ivanov.dto.user_dto.UserResponse;
+import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;

@@ -11,17 +11,14 @@ import java.util.List;
 @NoArgsConstructor
 @Table(schema = "public", name = "orders")
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LineItem> lineItems;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-
 }

@@ -1,8 +1,7 @@
 package com.example.yuriy_ivanov.services;
 
-import com.example.yuriy_ivanov.dto.cart_dto.CartRequest;
-import com.example.yuriy_ivanov.dto.cart_dto.CartResponse;
-import com.example.yuriy_ivanov.dto.product_dto.ProductRequest;
+import com.example.yuriy_ivanov.dto.cart.CartRequest;
+import com.example.yuriy_ivanov.dto.cart.CartResponse;
 import com.example.yuriy_ivanov.entities.Cart;
 import com.example.yuriy_ivanov.entities.LineItem;
 import com.example.yuriy_ivanov.entities.Product;
@@ -12,9 +11,11 @@ import com.example.yuriy_ivanov.repositories.LineItemRepository;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,11 +23,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartService {
-
     private final CartRepository cartRepository;
-    private final LineItemRepository lineItemRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final LineItemRepository lineItemRepository;
     private final ObjectMapper objectMapper;
 
     public CartResponse addItem(CartRequest cartRequest) {
@@ -35,6 +35,8 @@ public class CartService {
         Cart cart = findOrCreateCart(user);
         createLineItem(cart, product);
 
+        cartRepository.save(cart);
+
         return objectMapper.convertValue(cart, CartResponse.class);
     }
 
@@ -42,8 +44,9 @@ public class CartService {
         User user = findUser(cartRequest);
         Product product = findProduct(cartRequest);
         Cart cart = findCart(user);
-        LineItem lineItem = findLineItem(cart.getLineItems(), product);
-        removeLineItem(lineItem);
+        removeLineItem(cart, product);
+
+        cartRepository.save(cart);
 
         return objectMapper.convertValue(cart, CartResponse.class);
     }
@@ -55,11 +58,23 @@ public class CartService {
     }
 
     private User findUser(CartRequest cartRequest) {
-        return userRepository.getById(cartRequest.getUserId());
+        Optional<User> user = userRepository.findById(cartRequest.getUserId());
+
+        if(user.isPresent()) {
+            return user.get();
+        }
+
+        throw new RuntimeException();
     }
 
     private Product findProduct(CartRequest cartRequest) {
-        return productRepository.getById(cartRequest.getProductId());
+        Optional<Product> product = productRepository.findById(cartRequest.getProductId());
+
+        if(product.isPresent()) {
+            return product.get();
+        }
+
+        throw new RuntimeException();
     }
 
     private Cart findCart(User user) {
@@ -67,65 +82,66 @@ public class CartService {
     }
 
     private Cart findOrCreateCart(User user) {
-        Optional<Cart> cartFromDb = cartRepository.getByUserId(user.getId());
-        Cart cart = null;
+        Optional<Cart> cart = cartRepository.getByUserId(user.getId());
 
-        if(cartFromDb.isPresent()) {
-            cart = cartFromDb.get();
+        if(cart.isPresent()) {
+            return cart.get();
         } else {
-            Cart newCart =  new Cart();
+            Cart newCart = new Cart();
             newCart.setUser(user);
-            cartRepository.save(newCart);
-            cart = newCart;
+
+            return newCart;
         }
-        return cart;
     }
 
-    private LineItem findLineItem(List<LineItem> lineItems, Product product) {
-        LineItem lineItem = null;
-        for(LineItem item : lineItems) {
-            if(Objects.equals(item.getProduct().getId(), product.getId())) {
-                lineItem = item;
-            }
+    private void createLineItem(Cart cart, Product product) {
+        if (cart.getLineItems() == null) {
+            LineItem lineItem = initLineItem(product);
+            List<LineItem> lineItems= new ArrayList<>();
+            lineItems.add(lineItem);
+            cart.setLineItems(lineItems);
         }
+        // TODO: 12.03.2022 add find product lineitem 
+        else {
+            updateLineItemQuantity(cart, product);
+        }
+    }
 
-        if (lineItem == null) {
-            throw new RuntimeException();
-        }
+    private LineItem initLineItem(Product product) {
+        LineItem lineItem = new LineItem();
+        lineItem.setQuantity(1);
+        lineItem.setProduct(product);
 
         return lineItem;
     }
 
-    private void createLineItem(Cart cart, Product product) {
-        LineItem lineItem = null;
-
+    private void updateLineItemQuantity(Cart cart, Product product) {
         for (LineItem item : cart.getLineItems()) {
             if (Objects.equals(item.getProduct().getId(), product.getId())) {
-                lineItem = item;
+                item.setQuantity(item.getQuantity() + 1);
+            }
+        }
+    }
+
+    private void removeLineItem(Cart cart, Product product) {
+        List<LineItem> lineItems = cart.getLineItems();
+        LineItem lineItem = findLineItem(lineItems, product);
+
+        Integer quantity = lineItem.getQuantity();
+        if(quantity > 1) {
+            lineItem.setQuantity(quantity - 1);
+        } else {
+            lineItems.remove(lineItem);
+        }
+    }
+
+    private LineItem findLineItem(List<LineItem> lineItems, Product product) {
+        for(LineItem item : lineItems) {
+            if(Objects.equals(item.getProduct().getId(), product.getId())) {
+                return item;
             }
         }
 
-        if (lineItem != null ) {
-            lineItem.setQuantity(lineItem.getQuantity() + 1);
-            lineItemRepository.save(lineItem);
-        } else {
-            lineItem = new LineItem();
-            lineItem.setCart(cart);
-            lineItem.setProduct(product);
-            lineItemRepository.save(lineItem);
-        }
-
-        lineItemRepository.save(lineItem);
+        throw new RuntimeException();
     }
-
-    private void removeLineItem(LineItem lineItem) {
-        if(lineItem.getQuantity() > 1) {
-            lineItem.setQuantity(lineItem.getQuantity() - 1);
-            lineItemRepository.save(lineItem);
-        }
-        else {
-            lineItemRepository.delete(lineItem);
-        }
-    }
-
 }

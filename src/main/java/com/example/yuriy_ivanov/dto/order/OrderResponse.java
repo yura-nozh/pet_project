@@ -1,6 +1,6 @@
-package com.example.yuriy_ivanov.dto.order_dto;
+package com.example.yuriy_ivanov.dto.order;
 
-import com.example.yuriy_ivanov.entities.LineItem;
+import com.example.yuriy_ivanov.dto.line_item.LineItemResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResponse {
     private Long id;
-    private List<LineItem> lineItems;
+    private List<LineItemResponse> lineItems;
 }

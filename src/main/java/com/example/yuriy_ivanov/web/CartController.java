@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.web;
 
-import com.example.yuriy_ivanov.dto.cart_dto.CartRequest;
-import com.example.yuriy_ivanov.dto.cart_dto.CartResponse;
+import com.example.yuriy_ivanov.dto.cart.CartRequest;
+import com.example.yuriy_ivanov.dto.cart.CartResponse;
 import com.example.yuriy_ivanov.services.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

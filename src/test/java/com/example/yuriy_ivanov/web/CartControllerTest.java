@@ -81,6 +81,7 @@ public class CartControllerTest {
         cart.setUser(user);
         LineItem lineItem = new LineItem();
         lineItem.setProduct(product);
+        lineItem.setQuantity(1);
 //        lineItem.setCart(cart);
         List<LineItem> list = new ArrayList<>();
         list.add(lineItem);
@@ -115,7 +116,7 @@ public class CartControllerTest {
         Product product = createProduct();
         User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);
-
+        int size = cart.getLineItems().size();
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
 
         MockHttpServletRequestBuilder requestBuilder3 = post("/cart/remove")
@@ -125,13 +126,9 @@ public class CartControllerTest {
         String result3 = resultActions3.andReturn().getResponse().getContentAsString();
 
         CartResponse cartResponse = objectMapper.readValue(result3, CartResponse.class);
-        List<Cart> list = cartRepository.findAll();
 
         resultActions3.andExpect(status().isOk());
-        assertNotNull(list.size());
-        assertEquals((cart.getLineItems().size() - 1), list.size());
-
-        assertEquals(1, list.size());
+        assertEquals(size - 1, cartResponse.getLineItems().size());
     }
 
 }

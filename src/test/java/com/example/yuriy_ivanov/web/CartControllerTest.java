@@ -2,6 +2,7 @@ package com.example.yuriy_ivanov.web;
 
 import com.example.yuriy_ivanov.dto.cart.CartRequest;
 import com.example.yuriy_ivanov.dto.cart.CartResponse;
+import com.example.yuriy_ivanov.dto.line_item.LineItemResponse;
 import com.example.yuriy_ivanov.entities.Cart;
 import com.example.yuriy_ivanov.entities.LineItem;
 import com.example.yuriy_ivanov.entities.Product;
@@ -82,7 +83,6 @@ public class CartControllerTest {
         LineItem lineItem = new LineItem();
         lineItem.setProduct(product);
         lineItem.setQuantity(1);
-//        lineItem.setCart(cart);
         List<LineItem> list = new ArrayList<>();
         list.add(lineItem);
         cart.setLineItems(list);
@@ -102,12 +102,20 @@ public class CartControllerTest {
                 .content(objectMapper.writeValueAsString(cartRequest));
         ResultActions resultActions = this.mockMvc.perform(requestBuilder);
         String result = resultActions.andReturn().getResponse().getContentAsString();
+        CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
+        LineItemResponse lineItemResponse = cartResponse.getLineItems().get(0);
+        Long id = lineItemResponse.getProduct().getId();
 
         MockHttpServletRequestBuilder requestBuilder2 = post("/cart/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest));
         ResultActions resultActions2 = this.mockMvc.perform(requestBuilder2);
         String result2 = resultActions2.andReturn().getResponse().getContentAsString();
+        CartResponse cartResponse2 = objectMapper.readValue(result2, CartResponse.class);
+        LineItemResponse lineItemResponse2 = cartResponse2.getLineItems().get(0);
+        Long id2 = lineItemResponse2.getProduct().getId();
+
+        assertEquals(id, id2);
     }
 
     @Test

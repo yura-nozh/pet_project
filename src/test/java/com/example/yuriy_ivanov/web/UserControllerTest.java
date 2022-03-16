@@ -41,8 +41,6 @@ public class UserControllerTest {
         userRepository.deleteAll();
     }
 
-//    @Sql(statements = "ALTER TABLE role AUTO_INCREMENT = 0")
-
     public User createUser(String firstName, String lastName, String email, String password) {
         User user = new User();
         user.setFirstName(firstName);

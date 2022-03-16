@@ -2,6 +2,8 @@ package com.example.yuriy_ivanov.web;
 
 import com.example.yuriy_ivanov.dto.cart.CartRequest;
 import com.example.yuriy_ivanov.dto.cart.CartResponse;
+import com.example.yuriy_ivanov.dto.enums.Brand;
+import com.example.yuriy_ivanov.dto.enums.Type;
 import com.example.yuriy_ivanov.dto.line_item.LineItemResponse;
 import com.example.yuriy_ivanov.entities.Cart;
 import com.example.yuriy_ivanov.entities.LineItem;
@@ -54,13 +56,13 @@ public class CartControllerTest {
 
     public Product createProduct() {
         Product product = new Product();
-        product.setBrand("Thule");
-        product.setType("business");
+        product.setBrand(Brand.THULE);
+        product.setType(Type.BUSINESS);
         product.setVolume(30);
         product.setCount(10);
         product.setPrice(5000f);
 
-        productRepository.saveAndFlush(product);
+        productRepository.save(product);
 
         return product;
     }
@@ -93,6 +95,7 @@ public class CartControllerTest {
     }
 
     @Test
+    @Transactional
     public void shouldAddNewItem() throws Exception {
         Product product = createProduct();
         User user = createUser("test@mail.tt");
@@ -105,6 +108,7 @@ public class CartControllerTest {
         CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
         LineItemResponse lineItemResponse = cartResponse.getLineItems().get(0);
         Long id = lineItemResponse.getProduct().getId();
+        assertEquals(1, lineItemResponse.getQuantity());
 
         MockHttpServletRequestBuilder requestBuilder2 = post("/cart/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -116,6 +120,39 @@ public class CartControllerTest {
         Long id2 = lineItemResponse2.getProduct().getId();
 
         assertEquals(id, id2);
+        assertEquals(2, lineItemResponse2.getQuantity());
+    }
+
+    @Test
+    @Transactional
+    public void shouldAddOneMoreItem() throws Exception {
+        Product product = createProduct();
+        User user = createUser("test@mail.ru");
+        Cart cart = createCart(user, product);
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
+        Integer testQuantity = 0;
+        List<LineItem> testList = cart.getLineItems();
+        for(LineItem testLineItem : testList) {
+            if (testLineItem.getProduct().equals(product)) {
+                testQuantity = testLineItem.getQuantity();
+            }
+        }
+        MockHttpServletRequestBuilder requestBuilder = post("/cart/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cartRequest));
+        ResultActions resultActions = this.mockMvc.perform(requestBuilder);
+        String result = resultActions.andReturn().getResponse().getContentAsString();
+
+        CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
+        List<LineItemResponse> listLineItems = cartResponse.getLineItems();
+        Integer newQuantity = 0;
+        for(LineItemResponse lineItem : listLineItems) {
+            if(lineItem.getProduct().getId().equals(product.getId())) {
+                newQuantity = lineItem.getQuantity();
+            }
+        }
+        assertEquals(testQuantity + 1, newQuantity);
+
     }
 
     @Test
@@ -127,16 +164,37 @@ public class CartControllerTest {
         int size = cart.getLineItems().size();
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
 
-        MockHttpServletRequestBuilder requestBuilder3 = post("/cart/remove")
+        MockHttpServletRequestBuilder requestBuilder = post("/cart/remove")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest));
-        ResultActions resultActions3 = this.mockMvc.perform(requestBuilder3);
-        String result3 = resultActions3.andReturn().getResponse().getContentAsString();
+        ResultActions resultActions = this.mockMvc.perform(requestBuilder);
+        String result = resultActions.andReturn().getResponse().getContentAsString();
 
-        CartResponse cartResponse = objectMapper.readValue(result3, CartResponse.class);
+        CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
 
-        resultActions3.andExpect(status().isOk());
+        resultActions.andExpect(status().isOk());
         assertEquals(size - 1, cartResponse.getLineItems().size());
+    }
+
+    @Test
+    @Transactional
+    public void shouldRemoveCart() throws Exception {
+        Product product = createProduct();
+        User user = createUser("test2@mail.tt");
+        Cart cart = createCart(user, product);
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
+
+        MockHttpServletRequestBuilder requestBuilder = post("/cart/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cartRequest));
+        ResultActions resultActions = this.mockMvc.perform(requestBuilder);
+        String result = resultActions.andReturn().getResponse().getContentAsString();
+        List<Cart> testList = cartRepository.findAll();
+
+        resultActions.andExpect(status().isOk());
+        assertNotNull(result);
+        assertEquals("Cart was successfully deleted.", result);
+        assertEquals(0, testList.size());
     }
 
 }

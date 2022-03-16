@@ -1,5 +1,7 @@
 package com.example.yuriy_ivanov.web;
 
+import com.example.yuriy_ivanov.dto.enums.Brand;
+import com.example.yuriy_ivanov.dto.enums.Type;
 import com.example.yuriy_ivanov.dto.product.ProductRequest;
 import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
@@ -42,7 +44,7 @@ public class ProductControllerTest {
         productRepository.deleteAll();
     }
 
-    public Product createProduct(String brand, String type, Integer volume, Integer count, Float price) {
+    public Product createProduct(Brand brand, Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
         product.setBrand(brand);
         product.setType(type);
@@ -65,7 +67,7 @@ public class ProductControllerTest {
 
     @Test
     public void shouldReturnUSerList() throws Exception {
-        createProduct("Thule", "buisness", 30, 10, 5000f);
+        createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
         ResultActions resultActions = this.mockMvc.perform(get("/bags"));
         String result = resultActions.andReturn().getResponse().getContentAsString();
         List<Product> testList = objectMapper.readValue(result, new TypeReference<>() {});
@@ -77,7 +79,7 @@ public class ProductControllerTest {
 
     @Test
     public void shouldReturnProductById() throws Exception {
-        Product product = createProduct("Thule", "buisness", 30, 10, 5000f);
+        Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
         ResultActions resultActions = this.mockMvc.perform(get("/bags/" + product.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();
         ProductResponse testProductResponse = objectMapper.readValue(result, new TypeReference<>() {});
@@ -89,7 +91,7 @@ public class ProductControllerTest {
     @Test
     public void shouldCreateProduct() throws Exception{
         List<Product> productsBefore = productRepository.findAll();
-        ProductRequest newProduct = new ProductRequest("Thule" , "buisness", 30, 10, 5000f);
+        ProductRequest newProduct = new ProductRequest(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
 
         assertEquals(0, productsBefore.size());
 
@@ -109,8 +111,8 @@ public class ProductControllerTest {
 
     @Test
     public void shouldUpdateProduct() throws Exception {
-        Product product = createProduct("Thule1", "buisness1", 30, 10, 5000f);
-        ProductRequest newProduct = new ProductRequest("Thule2", "buisness2", 31, 11, 6000f);
+        Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
+        ProductRequest newProduct = new ProductRequest(Brand.NIKE, Type.SPORTS, 31, 11, 6000f);
         List<Product> productsBefore = productRepository.findAll();
 
         MockHttpServletRequestBuilder requestBuilder = put("/bags/" + product.getId())
@@ -129,7 +131,7 @@ public class ProductControllerTest {
 
     @Test
     public void deleteProduct() throws Exception {
-        Product product = createProduct("Thule1", "buisness1", 30, 10, 5000f);
+        Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
 
         ResultActions resultActions = this.mockMvc.perform(delete("/bags/" + product.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();

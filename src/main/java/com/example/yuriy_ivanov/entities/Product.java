@@ -1,5 +1,7 @@
 package com.example.yuriy_ivanov.entities;
 
+import com.example.yuriy_ivanov.dto.enums.Brand;
+import com.example.yuriy_ivanov.dto.enums.Type;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +17,10 @@ public class Product {
     private Long id;
 
     @Column(nullable = false)
-    private String brand;
+    private Brand brand;
 
     @Column(nullable = false)
-    private String type;
+    private Type type;
 
     @Column(nullable = false)
     private Integer volume;

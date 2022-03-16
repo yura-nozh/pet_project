@@ -20,10 +20,13 @@ public class ProductService {
     private final ObjectMapper objectMapper;
     private final Converter converter;
 
-//    @PostConstruct
-//    public void init() {
-//        System.out.println();
-//    }
+
+    public ProductResponse create(ProductRequest productRequest) {
+        Product bag = objectMapper.convertValue(productRequest, Product.class);
+        productRepository.save(bag);
+
+        return objectMapper.convertValue(bag, ProductResponse.class);
+    }
 
     public List<ProductResponse> all(Pageable pageable){
         List<ProductResponse> bags = new ArrayList<>();
@@ -32,13 +35,6 @@ public class ProductService {
         }
 
         return bags;
-    }
-
-    public ProductResponse create(ProductRequest productRequest) {
-        Product bag = objectMapper.convertValue(productRequest, Product.class);
-        productRepository.save(bag);
-
-        return objectMapper.convertValue(bag, ProductResponse.class);
     }
 
     public ProductResponse findById(Long id) {

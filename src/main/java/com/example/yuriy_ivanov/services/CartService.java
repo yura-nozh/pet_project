@@ -13,6 +13,7 @@ import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class CartService {
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-    private final LineItemRepository lineItemRepository;
     private final ObjectMapper objectMapper;
+    private final LineItemRepository lineItemRepository;
 
     public CartResponse addItem(CartRequest cartRequest) {
         User user = findUser(cartRequest);
@@ -99,6 +100,7 @@ public class CartService {
             LineItem lineItem = initLineItem(product);
             List<LineItem> lineItems= new ArrayList<>();
             lineItems.add(lineItem);
+            lineItem.setCart(cart);
             cart.setLineItems(lineItems);
         }
         // TODO: 12.03.2022 add find product lineitem 
@@ -132,6 +134,8 @@ public class CartService {
             lineItem.setQuantity(quantity - 1);
         } else {
             lineItems.remove(lineItem);
+            cart.setLineItems(lineItems);
+            lineItemRepository.delete(lineItem);
         }
     }
 

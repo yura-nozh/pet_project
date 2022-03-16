@@ -26,7 +26,7 @@ public class CartController {
         return ResponseEntity.ok(cartResponse);
     }
 
-    @DeleteMapping
+    @PostMapping("/delete")
     public ResponseEntity<String> deleteCart(@RequestBody CartRequest cartRequest) {
         cartService.destroy(cartRequest);
         return ResponseEntity.ok("Cart was successfully deleted.");

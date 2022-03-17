@@ -8,6 +8,7 @@ import com.example.yuriy_ivanov.repositories.CartRepository;
 import com.example.yuriy_ivanov.repositories.OrderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,10 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final OrderRepository orderRepository;
     private final ObjectMapper objectMapper;
+
+    private Cart findCart(@NotNull OrderRequest orderRequest) {
+        return cartRepository.findByUserId(orderRequest.getUserId());
+    }
 
     public OrderResponse createOrder(OrderRequest orderRequest) {
         Cart cart = findCart(orderRequest);
@@ -30,9 +35,4 @@ public class OrderService {
 
         return objectMapper.convertValue(order, OrderResponse.class);
     }
-
-    private Cart findCart(OrderRequest orderRequest) {
-        return cartRepository.findByUserId(orderRequest.getUserId());
-    }
-
 }

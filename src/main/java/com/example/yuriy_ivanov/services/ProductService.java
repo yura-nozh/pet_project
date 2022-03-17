@@ -3,6 +3,8 @@ package com.example.yuriy_ivanov.services;
 import com.example.yuriy_ivanov.dto.product.ProductRequest;
 import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
+import com.example.yuriy_ivanov.exception.ServiceException;
+import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +39,20 @@ public class ProductService {
         return bags;
     }
 
-    public ProductResponse findById(Long id) {
-        Product bag = productRepository.findById(id).get();
+    public ProductResponse findById(Long id) throws ServiceException {
+        if(productRepository.findById(id).isEmpty()) {
+            throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
+        }
+        Product bag = productRepository.getById(id);
 
         return objectMapper.convertValue(bag, ProductResponse.class);
     }
 
     public ProductResponse update(Long id, ProductRequest productRequest) {
-        Product bag = productRepository.findById(id).get();
+        if(productRepository.findById(id).isEmpty()) {
+            throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
+        }
+        Product bag = productRepository.getById(id);
         bag.setBrand(productRequest.getBrand());
         bag.setCount(productRequest.getCount());
         bag.setType(bag.getType());
@@ -55,7 +63,11 @@ public class ProductService {
         return objectMapper.convertValue(bag, ProductResponse.class);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) throws ServiceException{
+        if(productRepository.findById(id).isEmpty()) {
+            throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
+        }
+
         productRepository.deleteById(id);
     }
 }

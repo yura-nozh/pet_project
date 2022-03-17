@@ -14,13 +14,13 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/add")
+    @PostMapping("/addItem")
     public ResponseEntity<CartResponse> addItem(@RequestBody CartRequest cartRequest) {
         CartResponse cartResponse = cartService.addItem(cartRequest);
         return ResponseEntity.ok(cartResponse);
     }
 
-    @PostMapping("/remove")
+    @PostMapping("/removeItem")
     public ResponseEntity<CartResponse> removeItem(@RequestBody CartRequest cartRequest) {
         CartResponse cartResponse = cartService.removeItem(cartRequest);
         return ResponseEntity.ok(cartResponse);

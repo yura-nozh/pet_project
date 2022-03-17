@@ -6,14 +6,14 @@ import com.example.yuriy_ivanov.entities.Cart;
 import com.example.yuriy_ivanov.entities.LineItem;
 import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.entities.User;
+import com.example.yuriy_ivanov.exception.ServiceException;
+import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.CartRepository;
 import com.example.yuriy_ivanov.repositories.LineItemRepository;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,28 +58,32 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
-    private User findUser(CartRequest cartRequest) {
+    private User findUser(CartRequest cartRequest) throws ServiceException {
         Optional<User> user = userRepository.findById(cartRequest.getUserId());
 
         if(user.isPresent()) {
             return user.get();
         }
 
-        throw new RuntimeException();
+        throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
     }
 
-    private Product findProduct(CartRequest cartRequest) {
+    private Product findProduct(CartRequest cartRequest) throws ServiceException {
         Optional<Product> product = productRepository.findById(cartRequest.getProductId());
 
         if(product.isPresent()) {
             return product.get();
         }
 
-        throw new RuntimeException();
+        throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
     }
 
-    private Cart findCart(User user) {
-        return cartRepository.findByUserId(user.getId());
+    private Cart findCart(User user) throws ServiceException {
+        Optional<Cart> cart = cartRepository.getByUserId(user.getId());
+        if(cart.isPresent()) {
+            return cartRepository.findByUserId(user.getId());
+        }
+            throw new ServiceException("Cart is not exist", TypicalError.NOT_FOUND);
     }
 
     private Cart findOrCreateCart(User user) {
@@ -90,22 +94,20 @@ public class CartService {
         } else {
             Cart newCart = new Cart();
             newCart.setUser(user);
-
             return newCart;
         }
     }
 
     private void createLineItem(Cart cart, Product product) {
-        if (cart.getLineItems() == null) {
+        if (cart.getLineItems() == null ) {
             LineItem lineItem = initLineItem(product);
             List<LineItem> lineItems= new ArrayList<>();
             lineItems.add(lineItem);
             lineItem.setCart(cart);
             cart.setLineItems(lineItems);
         }
-        // TODO: 12.03.2022 add find product lineitem 
         else {
-            updateLineItemQuantity(cart, product);
+            updateLineItemQuantityOrCreateLineItem(cart, product);
         }
     }
 
@@ -117,10 +119,17 @@ public class CartService {
         return lineItem;
     }
 
-    private void updateLineItemQuantity(Cart cart, Product product) {
+    private void updateLineItemQuantityOrCreateLineItem(Cart cart, Product product) {
         for (LineItem item : cart.getLineItems()) {
             if (Objects.equals(item.getProduct().getId(), product.getId())) {
                 item.setQuantity(item.getQuantity() + 1);
+            }
+            else {
+                LineItem lineItem = initLineItem(product);
+                List<LineItem> lineItems= new ArrayList<>();
+                lineItems.add(lineItem);
+                lineItem.setCart(cart);
+                cart.setLineItems(lineItems);
             }
         }
     }
@@ -139,13 +148,13 @@ public class CartService {
         }
     }
 
-    private LineItem findLineItem(List<LineItem> lineItems, Product product) {
+    private LineItem findLineItem(List<LineItem> lineItems, Product product) throws ServiceException {
         for(LineItem item : lineItems) {
             if(Objects.equals(item.getProduct().getId(), product.getId())) {
                 return item;
             }
         }
 
-        throw new RuntimeException();
+        throw new ServiceException("Item not in cart", TypicalError.BAD_REQUEST);
     }
 }

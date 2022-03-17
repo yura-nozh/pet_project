@@ -3,6 +3,9 @@ package com.example.yuriy_ivanov.services;
 import com.example.yuriy_ivanov.dto.user.UserRequest;
 import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
+import com.example.yuriy_ivanov.exception.ErrorMessage;
+import com.example.yuriy_ivanov.exception.ServiceException;
+import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +37,19 @@ public class UserService {
         return users;
     }
 
-    public UserResponse findById(Long id) {
-        User user = userRepository.findById(id).get();
+    public UserResponse findById(Long id) throws ServiceException {
+        if(userRepository.findById(id).isPresent()) {
+            User user = userRepository.getById(id);
+            return objectMapper.convertValue(user, UserResponse.class);
+        }
 
-        return objectMapper.convertValue(user, UserResponse.class);
+        throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
     }
 
     public UserResponse update(Long id, UserRequest userRequest) {
+        if(userRepository.findById(id).isEmpty()) {
+            throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
+        }
         User user = userRepository.getById(id);
 
         user.setEmail(userRequest.getEmail());
@@ -54,6 +63,9 @@ public class UserService {
     }
 
     public void delete(Long id) {
+        if(userRepository.findById(id).isEmpty()) {
+            throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
+        }
         userRepository.deleteById(id);
     }
 }

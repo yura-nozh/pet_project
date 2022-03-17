@@ -52,6 +52,7 @@ public class UserService {
         }
         User user = userRepository.getById(id);
 
+        // TODO: 17.03.2022 use mapper
         user.setEmail(userRequest.getEmail());
         user.setFirstName(userRequest.getFirstName());
         user.setLastName(userRequest.getLastName());

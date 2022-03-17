@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+// TODO: 17.03.2022 use or remove
 @Data
 @AllArgsConstructor
 public class Converter {

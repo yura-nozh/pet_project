@@ -41,6 +41,7 @@ public class ProductService {
 
     public ProductResponse findById(Long id) throws ServiceException {
         if(productRepository.findById(id).isEmpty()) {
+            // TODO: 17.03.2022 orelsethrow of optional
             throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
         }
         Product bag = productRepository.getById(id);
@@ -52,6 +53,7 @@ public class ProductService {
         if(productRepository.findById(id).isEmpty()) {
             throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
         }
+        // TODO: 17.03.2022 use mapper
         Product bag = productRepository.getById(id);
         bag.setBrand(productRequest.getBrand());
         bag.setCount(productRequest.getCount());

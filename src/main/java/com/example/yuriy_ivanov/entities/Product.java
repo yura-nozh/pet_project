@@ -22,6 +22,7 @@ public class Product {
     @Column(nullable = false)
     private Type type;
 
+    // TODO: 17.03.2022 change to size and calculate volume for whole order
     @Column(nullable = false)
     private Integer volume;
 

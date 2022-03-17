@@ -103,6 +103,7 @@ public class CartServiceTest {
         Long productId = list.get(0).getId();
 
         assertEquals(user.getId(), userId);
+        // TODO: 17.03.2022 fix error 10 to 5
         assertEquals(product.getId(), productId);
     }
 

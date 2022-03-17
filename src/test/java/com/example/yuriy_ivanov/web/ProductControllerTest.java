@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ProductControllerTest {
 
-
+// TODO: 17.03.2022 add product generator for testing purposes put some ~100 dif products
 
     @Autowired
     ObjectMapper objectMapper;

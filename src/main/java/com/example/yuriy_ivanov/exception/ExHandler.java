@@ -17,4 +17,6 @@ public class ExHandler extends ResponseEntityExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(typicalError.name(), e.getMessage());
         return new ResponseEntity<>(errorMessage, typicalError.getHttpStatus());
     }
+
+    // TODO: 17.03.2022 add Throwable catch
 }

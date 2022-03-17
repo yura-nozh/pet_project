@@ -105,5 +105,6 @@ public class OrderControllerTest {
         resultActions.andExpect(status().isOk());
         assertEquals(user.getId(), orderResponse.getUser().getId());
         assertEquals(cartSize, orderResponse.getLineItems().size());
+        // TODO: 17.03.2022 check if products in order cant be bought after order created
     }
 }

@@ -170,6 +170,7 @@ public class CartControllerTest {
         ResultActions resultActions = this.mockMvc.perform(requestBuilder);
         String result = resultActions.andReturn().getResponse().getContentAsString();
 
+        // TODO: 17.03.2022 result = ""
         CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
 
         resultActions.andExpect(status().isOk());

@@ -9,6 +9,7 @@ import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+    private final ModelMapper mapper;
 
     public UserResponse create(UserRequest userRequest) {
         User user = objectMapper.convertValue(userRequest, User.class);
@@ -50,14 +52,10 @@ public class UserService {
         if(userRepository.findById(id).isEmpty()) {
             throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
         }
-        User user = userRepository.getById(id);
 
-        // TODO: 17.03.2022 use mapper
-        user.setEmail(userRequest.getEmail());
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
-        user.setPassword(userRequest.getPassword());
-
+        // FIXED
+        User user = mapper.map(userRequest, User.class);
+        user.setId(id);
         User updatedUser = userRepository.save(user);
 
         return objectMapper.convertValue(updatedUser, UserResponse.class);

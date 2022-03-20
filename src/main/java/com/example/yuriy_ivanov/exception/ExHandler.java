@@ -1,6 +1,7 @@
 package com.example.yuriy_ivanov.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,5 +19,11 @@ public class ExHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, typicalError.getHttpStatus());
     }
 
-    // TODO: 17.03.2022 add Throwable catch
+    // FIXED
+    @ExceptionHandler(value = {Throwable.class})
+    protected ResponseEntity<Object> handelApiException(Throwable throwable) {
+        HttpStatus serverError = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiException apiException = new ApiException(throwable.getMessage(), throwable, serverError);
+        return new ResponseEntity<>(apiException, serverError);
+    }
 }

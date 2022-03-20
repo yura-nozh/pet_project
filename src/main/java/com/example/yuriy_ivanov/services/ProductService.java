@@ -8,6 +8,7 @@ import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
-    private final Converter converter;
+    private final ModelMapper mapper;
 
 
     public ProductResponse create(ProductRequest productRequest) {
@@ -53,13 +54,9 @@ public class ProductService {
         if(productRepository.findById(id).isEmpty()) {
             throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
         }
-        // TODO: 17.03.2022 use mapper
-        Product bag = productRepository.getById(id);
-        bag.setBrand(productRequest.getBrand());
-        bag.setCount(productRequest.getCount());
-        bag.setType(bag.getType());
-        bag.setVolume(bag.getVolume());
-        bag.setPrice(bag.getPrice());
+        // FIXED
+        Product bag = mapper.map(productRequest, Product.class);
+        bag.setId(id);
         productRepository.save(bag);
 
         return objectMapper.convertValue(bag, ProductResponse.class);

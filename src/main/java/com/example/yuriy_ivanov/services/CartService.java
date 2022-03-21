@@ -35,7 +35,7 @@ public class CartService {
         User user = findUser(cartRequest);
         Product product = findProduct(cartRequest);
         Cart cart = findOrCreateCart(user);
-        createLineItem(cart, product);
+        createLineItem(cart, product, cartRequest.getQuantity());
 
         cartRepository.save(cart);
 
@@ -59,8 +59,7 @@ public class CartService {
 
     private User findUser(CartRequest cartRequest) throws ServiceException {
         Optional<User> user = userRepository.findById(cartRequest.getUserId());
-        User userEntity = user.orElseThrow(()-> new ServiceException("USER NOT FOUND", TypicalError.USER_NOT_FOUND));
-        return userEntity;
+        return user.orElseThrow(()-> new ServiceException("USER NOT FOUND", TypicalError.USER_NOT_FOUND));
     }
 
     private Product findProduct(CartRequest cartRequest) throws ServiceException {
@@ -75,10 +74,7 @@ public class CartService {
 
     private Cart findCart(User user) throws ServiceException {
         Optional<Cart> cart = cartRepository.getByUserId(user.getId());
-        if(cart.isPresent()) {
-            return cartRepository.findByUserId(user.getId());
-        }
-            throw new ServiceException("Cart is not exist", TypicalError.NOT_FOUND);
+        return cart.orElseThrow(() -> new ServiceException("PRODUCT NOT FOUND", TypicalError.PRODUCT_NOT_FOUND));
     }
 
     private Cart findOrCreateCart(User user) {
@@ -93,34 +89,34 @@ public class CartService {
         }
     }
 
-    private void createLineItem(Cart cart, Product product) {
-        if (cart.getLineItems() == null ) {
-            LineItem lineItem = initLineItem(product);
+    private void createLineItem(Cart cart, Product product, Integer qty) {
+        if (cart.getLineItems() == null) {
+            LineItem lineItem = initLineItem(product, qty);
             List<LineItem> lineItems= new ArrayList<>();
             lineItems.add(lineItem);
             lineItem.setCart(cart);
             cart.setLineItems(lineItems);
         }
         else {
-            updateLineItemQuantityOrCreateLineItem(cart, product);
+            updateLineItemQuantityOrCreateLineItem(cart, product, qty);
         }
     }
 
-    private LineItem initLineItem(Product product) {
+    private @NotNull LineItem initLineItem(Product product, Integer qty) {
         LineItem lineItem = new LineItem();
-        lineItem.setQuantity(1);
+        lineItem.setQuantity(qty);
         lineItem.setProduct(product);
 
         return lineItem;
     }
 
-    private void updateLineItemQuantityOrCreateLineItem(Cart cart, Product product) {
+    private void updateLineItemQuantityOrCreateLineItem(@NotNull Cart cart, Product product, Integer qty) {
         for (LineItem item : cart.getLineItems()) {
             if (Objects.equals(item.getProduct().getId(), product.getId())) {
-                item.setQuantity(item.getQuantity() + 1);
+                item.setQuantity(item.getQuantity() + qty);
             }
             else {
-                LineItem lineItem = initLineItem(product);
+                LineItem lineItem = initLineItem(product, qty);
                 List<LineItem> lineItems= new ArrayList<>();
                 lineItems.add(lineItem);
                 lineItem.setCart(cart);
@@ -149,7 +145,6 @@ public class CartService {
                 return item;
             }
         }
-
         throw new ServiceException("Item not in cart", TypicalError.BAD_REQUEST);
     }
 }

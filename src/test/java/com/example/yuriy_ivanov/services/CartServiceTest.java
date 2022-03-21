@@ -93,7 +93,7 @@ public class CartServiceTest {
     public void shouldCreateCartWithFirstItem () {
         Product product = createProduct();
         User user = createUser();
-        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), 100);
         CartResponse cartResponse = cartService.addItem(cartRequest);
         Cart testCart = cartRepository.getById(cartResponse.getId());
         Long userId = testCart.getUser().getId();
@@ -114,7 +114,7 @@ public class CartServiceTest {
         Cart cart = createCart(user, product);
         LineItem lineItem = lineItemRepository.findLineItemByProductId(product.getId());
         Integer countBefore = lineItem.getQuantity();
-        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), 100);
 
         CartResponse cartResponse = cartService.addItem(cartRequest);
 
@@ -123,7 +123,7 @@ public class CartServiceTest {
 
         assertEquals(cart.getId(), cartResponse.getId());
         assertEquals(lineItem.getProduct(), lineItemAfter.getProduct());
-        assertEquals(countBefore + 1, countAfter);
+        assertEquals(countBefore + 100, countAfter);
     }
 
     @Transactional
@@ -132,15 +132,16 @@ public class CartServiceTest {
         Product product = createProduct();
         User user = createUser();
         Cart cart = createCart(user, product);
-        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
+        Integer qty = 1;
+        CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), qty);
         cartService.addItem(cartRequest);
-        Integer countBefore = lineItemRepository.findLineItemByProductId(product.getId()).getQuantity();
+        Integer qtyTest = lineItemRepository.findLineItemByProductId(product.getId()).getQuantity();
 
-        assertEquals(2, countBefore);
+        assertEquals(2, qtyTest);
 
         CartResponse firstCartResponse = cartService.removeItem(cartRequest);
         Integer countAfterFirstRemove = lineItemRepository.findLineItemByProductId(product.getId()).getQuantity();
-        assertEquals(1, countAfterFirstRemove);
+        assertEquals(qty, countAfterFirstRemove);
 
         CartResponse secondCartResponse = cartService.removeItem(cartRequest);
         assertEquals(firstCartResponse.getId(), secondCartResponse.getId());

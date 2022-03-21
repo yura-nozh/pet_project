@@ -14,6 +14,7 @@ import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,20 +53,14 @@ public class CartService {
         return objectMapper.convertValue(cart, CartResponse.class);
     }
 
-    public void destroy(CartRequest cartRequest) {
-        User user = findUser(cartRequest);
-        Cart cart = findCart(user);
-        cartRepository.delete(cart);
+    public void destroy(Long id) {
+        cartRepository.deleteById(id);
     }
 
     private User findUser(CartRequest cartRequest) throws ServiceException {
         Optional<User> user = userRepository.findById(cartRequest.getUserId());
-
-        if(user.isPresent()) {
-            return user.get();
-        }
-
-        throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
+        User userEntity = user.orElseThrow(()-> new ServiceException("USER NOT FOUND", TypicalError.USER_NOT_FOUND));
+        return userEntity;
     }
 
     private Product findProduct(CartRequest cartRequest) throws ServiceException {
@@ -134,7 +129,7 @@ public class CartService {
         }
     }
 
-    private void removeLineItem(Cart cart, Product product) {
+    private void removeLineItem(@NotNull Cart cart, Product product) {
         List<LineItem> lineItems = cart.getLineItems();
         LineItem lineItem = findLineItem(lineItems, product);
 
@@ -148,7 +143,7 @@ public class CartService {
         }
     }
 
-    private LineItem findLineItem(List<LineItem> lineItems, Product product) throws ServiceException {
+    private @NotNull LineItem findLineItem(@NotNull List<LineItem> lineItems, Product product) throws ServiceException {
         for(LineItem item : lineItems) {
             if(Objects.equals(item.getProduct().getId(), product.getId())) {
                 return item;

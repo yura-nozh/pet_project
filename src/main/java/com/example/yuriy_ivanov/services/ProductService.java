@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +42,11 @@ public class ProductService {
     }
 
     public ProductResponse findById(Long id) throws ServiceException {
-        if(productRepository.findById(id).isEmpty()) {
-            // TODO: 17.03.2022 orelsethrow of optional
-            throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
-        }
-        Product bag = productRepository.getById(id);
+        // FIXED
+        Optional<Product> bag = productRepository.findById(id);
+        Product bagEntity = bag.orElseThrow(() -> new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND));
 
-        return objectMapper.convertValue(bag, ProductResponse.class);
+        return objectMapper.convertValue(bagEntity, ProductResponse.class);
     }
 
     public ProductResponse update(Long id, ProductRequest productRequest) {

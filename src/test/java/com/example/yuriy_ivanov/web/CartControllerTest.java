@@ -164,13 +164,13 @@ public class CartControllerTest {
         int size = cart.getLineItems().size();
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
 
-        MockHttpServletRequestBuilder requestBuilder = post("/cart/remove")
+        MockHttpServletRequestBuilder requestBuilder = post("/cart/removeItem")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cartRequest));
         ResultActions resultActions = this.mockMvc.perform(requestBuilder);
         String result = resultActions.andReturn().getResponse().getContentAsString();
 
-        // TODO: 17.03.2022 result = ""
+        // FIXED
         CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
 
         resultActions.andExpect(status().isOk());

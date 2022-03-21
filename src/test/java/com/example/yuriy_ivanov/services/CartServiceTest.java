@@ -82,7 +82,6 @@ public class CartServiceTest {
         lineItem.setQuantity(1);
         List<LineItem> list = new ArrayList<>();
         list.add(lineItem);
-//        lineItem.setCart(cart);
         cart.setLineItems(list);
         cartRepository.save(cart);
 
@@ -154,12 +153,12 @@ public class CartServiceTest {
         Product product = createProduct();
         User user = createUser();
         Cart cart = createCart(user, product);
+        Long cartId = cart.getId();
         List<Cart> listBefore = cartRepository.findAll();
 
         assertEquals(1, listBefore.size());
 
-        CartRequest cartRequest = new CartRequest(product.getId(), user.getId());
-        cartService.destroy(cartRequest);
+        cartService.destroy(cartId);
         List<Cart> listAfter = cartRepository.findAll();
 
         assertEquals(0, listAfter.size());

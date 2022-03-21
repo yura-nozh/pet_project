@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -84,11 +85,13 @@ public class OrderServiceTest {
         Integer productListFromCart = cart.getLineItems().size();
         OrderResponse orderResponse = orderService.createOrder(orderRequest);
         Integer testList = orderResponse.getLineItems().size();
-//        List<Cart> listAfter = cartRepository.findAll();
+
+
         /// TODO: 16.03.2022 need to check that the card has been deleted
+
 
         assertEquals(productListFromCart, testList);
         assertEquals(cart.getUser(), orderResponse.getUser());
-//        assertEquals(0, listAfter);
+//        assertNull(listAfter);
     }
 }

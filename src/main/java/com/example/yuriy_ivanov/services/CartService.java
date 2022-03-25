@@ -53,6 +53,13 @@ public class CartService {
         return objectMapper.convertValue(cart, CartResponse.class);
     }
 
+    public CartResponse showUserCart(Long userId) {
+        Optional<Cart> cart = cartRepository.getByUserId(userId);
+        Cart desiredCart = cart.orElseThrow(() -> new ServiceException("CART NOT FOUND, PLEASE< ADD FIRST ITEM", TypicalError.CART_NOT_FOUND));
+
+        return objectMapper.convertValue(desiredCart, CartResponse.class);
+    }
+
     public void destroy(Long id) {
         cartRepository.deleteById(id);
     }

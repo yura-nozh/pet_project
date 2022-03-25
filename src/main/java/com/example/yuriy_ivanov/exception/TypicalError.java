@@ -11,7 +11,8 @@ public enum TypicalError {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND),
     USER_WITH_THIS_EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST),
-    NOT_SO_MANY_PRODUCTS(HttpStatus.CONFLICT);
+    NOT_SO_MANY_PRODUCTS(HttpStatus.CONFLICT),
+    CART_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus httpStatus;
 

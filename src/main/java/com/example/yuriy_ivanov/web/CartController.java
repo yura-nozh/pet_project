@@ -20,7 +20,6 @@ public class CartController {
         return ResponseEntity.ok(cartResponse);
     }
 
-
     @PostMapping("/removeItem")
     public ResponseEntity<CartResponse> removeItem(@RequestBody CartRequest cartRequest) {
         CartResponse cartResponse = cartService.removeItem(cartRequest);
@@ -29,6 +28,11 @@ public class CartController {
     //fixed as I understood the task
     // 17.03.2022 add map item - qty json to add(rewrite) in cart
 
+    @GetMapping("/showCart/{userId}")
+    public ResponseEntity<CartResponse> showUserCart(@PathVariable Long userId) {
+        CartResponse cartResponse = cartService.showUserCart(userId);
+        return ResponseEntity.ok(cartResponse);
+    }
 
     //FIXED
     @DeleteMapping("/{id}")

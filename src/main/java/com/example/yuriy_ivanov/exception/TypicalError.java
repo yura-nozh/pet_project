@@ -10,7 +10,8 @@ public enum TypicalError {
     BAD_REQUEST(HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND),
-    USER_WITH_THIS_EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST);
+    USER_WITH_THIS_EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST),
+    NOT_SO_MANY_PRODUCTS(HttpStatus.CONFLICT);
 
     private final HttpStatus httpStatus;
 

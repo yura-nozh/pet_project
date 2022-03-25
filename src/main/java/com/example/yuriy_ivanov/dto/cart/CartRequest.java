@@ -2,7 +2,6 @@ package com.example.yuriy_ivanov.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor

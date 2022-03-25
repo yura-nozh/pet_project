@@ -3,7 +3,6 @@ package com.example.yuriy_ivanov.services;
 import com.example.yuriy_ivanov.dto.user.UserRequest;
 import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
-import com.example.yuriy_ivanov.exception.ErrorMessage;
 import com.example.yuriy_ivanov.exception.ServiceException;
 import com.example.yuriy_ivanov.exception.TypicalError;
 import com.example.yuriy_ivanov.repositories.UserRepository;

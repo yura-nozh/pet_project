@@ -8,7 +8,10 @@ import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.Before;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,10 +44,25 @@ public class ProductControllerTest {
     @Autowired
     ProductRepository productRepository;
 
-    @AfterEach
+    @BeforeEach
     public void resetDB() {
         productRepository.deleteAll();
     }
+
+    public void generateProducts() {
+//        Random random = new Random();
+//        List<Brand> brands = Collections.unmodifiableList(Arrays.asList(Brand.values()));
+//        int brandsSize = brands.size();
+//
+//
+//        List<Object> types = Collections.unmodifiableList(Arrays.asList(Type.values()));
+//        int typesSize = types.size();
+//
+//        for(int i = 0; i < 100; i++) {
+//            int volume = 10;
+//            createProduct(brands.get(random.nextInt(brandsSize)), types.get(random.nextInt(typesSize)), volume + i, 1 + i, 1000f + (float)i);
+        }
+
 
     public Product createProduct(Brand brand, Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();

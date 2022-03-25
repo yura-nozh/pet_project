@@ -24,7 +24,7 @@ public class Product {
 
     // TODO: 17.03.2022 change to size and calculate volume for whole order
     @Column(nullable = false)
-    private Integer volume;
+    private Integer volume; // bag volume
 
     @Column(columnDefinition = "integer default 0", nullable = false)
     private Integer count;

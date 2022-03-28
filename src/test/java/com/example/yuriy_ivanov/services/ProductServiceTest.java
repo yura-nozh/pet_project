@@ -6,7 +6,6 @@ import com.example.yuriy_ivanov.dto.product.ProductRequest;
 import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest
-public class ProductServiceTest {
+class ProductServiceTest {
 
     @Autowired
     ProductRepository productRepository;
@@ -65,7 +64,7 @@ public class ProductServiceTest {
 
     @Transactional
     @Test
-    public void shouldCreateProduct() {
+    void shouldCreateProduct() {
         ProductRequest newProduct = new ProductRequest(Brand.THULE, Type.BUSINESS, 15, 5, 4500.90f);
         List<Product> list = productRepository.findAll();
         assertEquals(0, list.size());
@@ -80,7 +79,7 @@ public class ProductServiceTest {
 
     @Transactional
     @Test
-    public void shouldReturnAllProducts() {
+    void shouldReturnAllProducts() {
         createProduct(Brand.THULE, Type.BUSINESS, 15, 5, 4500.90f);
         createProduct(Brand.ADIDAS, Type.SPORTS, 30, 3, 3400.00f);
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.ASC, "id"));
@@ -91,7 +90,7 @@ public class ProductServiceTest {
 
     @Transactional
     @Test
-    public void shouldReturnProductById() {
+    void shouldReturnProductById() {
         Product product = createProduct(Brand.THULE, Type.BUSINESS, 15, 5, 4500.90f);
         ProductResponse productResponse = productService.findById(product.getId());
 
@@ -100,7 +99,7 @@ public class ProductServiceTest {
 
     @Transactional
     @Test
-    public void shouldUpdateProduct() {
+    void shouldUpdateProduct() {
         Product product = createProduct(Brand.THULE, Type.BUSINESS, 15, 5, 4500.90f);
         ProductRequest newProduct = new ProductRequest(Brand.ADIDAS, Type.SPORTS, 30, 3, 3400.00f);
         ProductResponse testProduct = productService.update(product.getId(), newProduct);
@@ -111,7 +110,7 @@ public class ProductServiceTest {
 
     @Transactional
     @Test
-    public void shouldDeleteProduct() {
+    void shouldDeleteProduct() {
         Product product = createProduct(Brand.THULE, Type.BUSINESS, 15, 5, 4500.90f);
         assertNotNull(productRepository.findAll());
 

@@ -1,9 +1,11 @@
 package com.example.yuriy_ivanov.dto.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 public class UserResponse {
     private Long id;

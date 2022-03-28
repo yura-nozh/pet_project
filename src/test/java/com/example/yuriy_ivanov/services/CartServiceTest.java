@@ -164,4 +164,18 @@ public class CartServiceTest {
 
         assertEquals(0, listAfter.size());
     }
+
+    @Transactional
+    @Test
+    void shouldFindUserCart() {
+        Product product = createProduct();
+        User user = createUser();
+        Cart cart = createCart(user, product);
+
+        CartResponse testCart = cartService.showUserCart(user.getId());
+        User testUser = cartRepository.findById(testCart.getId()).orElseThrow().getUser();
+
+        assertEquals(user.getId(), testUser.getId());
+
+    }
 }

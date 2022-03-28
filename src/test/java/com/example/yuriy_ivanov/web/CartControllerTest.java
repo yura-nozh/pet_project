@@ -27,8 +27,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -172,6 +171,21 @@ public class CartControllerTest {
 
         resultActions.andExpect(status().isOk());
         assertEquals(size - 1, cartResponse.getLineItems().size());
+    }
+
+    @Test
+    @Transactional
+    void shouldShowUserCart() throws Exception {
+        Product product = createProduct();
+        User user = createUser("test2@mail.by");
+        Cart cart = createCart(user, product);
+
+        ResultActions resultActions = this.mockMvc.perform(get("/cart/showCart/" + user.getId()));
+        String result = resultActions.andReturn().getResponse().getContentAsString();
+        CartResponse cartResponse = objectMapper.readValue(result, CartResponse.class);
+
+        resultActions.andExpect(status().isOk());
+        assertEquals(cart.getId(), cartResponse.getId());
     }
 
     @Test

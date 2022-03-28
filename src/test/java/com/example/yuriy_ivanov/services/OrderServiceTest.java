@@ -88,6 +88,6 @@ public class OrderServiceTest {
 //         FIXED
         assertEquals(0, list.size());
         assertEquals(productListFromCart, testList);
-        assertEquals(cart.getUser(), orderResponse.getUser());
+        assertEquals(cart.getUser().getId(), orderResponse.getUser().getId());
     }
 }

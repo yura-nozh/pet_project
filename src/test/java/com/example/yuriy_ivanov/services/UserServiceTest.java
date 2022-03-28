@@ -1,5 +1,7 @@
 package com.example.yuriy_ivanov.services;
 
+import com.example.yuriy_ivanov.dto.addresses.AddressesRequest;
+import com.example.yuriy_ivanov.dto.addresses.AddressesResponse;
 import com.example.yuriy_ivanov.dto.user.UserRequest;
 import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
@@ -105,5 +107,19 @@ public class UserServiceTest {
 
         userService.delete(user.getId());
         assertEquals(0, userRepository.findAll().size());
+    }
+
+
+    @Test
+    void shouldAddAddressToUser() {
+        User user = createUser("John", "Due", "mail@mail.com", "qwerty123");
+        AddressesRequest addressesRequest = new AddressesRequest("Russia", "Moscow", "Lenina", 112, user.getId());
+        AddressesResponse addressesResponse = userService.addAddressToUser(addressesRequest);
+        User testUser = userRepository.getById(addressesResponse.getUserId());
+        assertEquals(user.getId(), testUser.getId());
+        assertEquals(addressesRequest.getCountry(), addressesResponse.getCountry());
+        assertEquals(addressesRequest.getCity(), addressesResponse.getCity());
+        assertEquals(addressesRequest.getStreet(), addressesResponse.getStreet());
+        assertEquals(addressesRequest.getHouseNumber(), addressesResponse.getHouseNumber());
     }
 }

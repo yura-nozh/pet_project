@@ -1,10 +1,14 @@
 package com.example.yuriy_ivanov.services;
 
+import com.example.yuriy_ivanov.dto.addresses.AddressesRequest;
+import com.example.yuriy_ivanov.dto.addresses.AddressesResponse;
 import com.example.yuriy_ivanov.dto.user.UserRequest;
 import com.example.yuriy_ivanov.dto.user.UserResponse;
+import com.example.yuriy_ivanov.entities.Addresses;
 import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.exception.ServiceException;
 import com.example.yuriy_ivanov.exception.TypicalError;
+import com.example.yuriy_ivanov.repositories.AddressesRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final ModelMapper mapper;
+    private final AddressesRepository addressesRepository;
 
     public UserResponse create(UserRequest userRequest) {
         User user = objectMapper.convertValue(userRequest, User.class);
@@ -65,5 +70,11 @@ public class UserService {
             throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
         }
         userRepository.deleteById(id);
+    }
+
+    public AddressesResponse addAddressToUser(AddressesRequest addressesRequest) {
+        Addresses address = objectMapper.convertValue(addressesRequest, Addresses.class);
+        addressesRepository.save(address);
+        return objectMapper.convertValue(addressesRequest, AddressesResponse.class);
     }
 }

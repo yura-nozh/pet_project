@@ -3,12 +3,15 @@ package com.example.yuriy_ivanov.entities;
 import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(schema = "public", name = "products")
 public class Product {

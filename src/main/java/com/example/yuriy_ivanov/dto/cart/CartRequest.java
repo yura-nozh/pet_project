@@ -2,8 +2,11 @@ package com.example.yuriy_ivanov.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class CartRequest {
     private Long productId;

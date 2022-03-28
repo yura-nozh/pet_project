@@ -99,7 +99,7 @@ public class CartServiceTest {
         Long userId = testCart.getUser().getId();
 
         List<LineItem> list = lineItemRepository.findAll();
-        Long productId = list.get(0).getId();
+        Long productId = list.get(0).getProduct().getId();
 
         assertEquals(user.getId(), userId);
         // TODO: 17.03.2022 fix error 10 to 5

@@ -7,6 +7,7 @@ import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +31,7 @@ public class ProductServiceTest {
     @Autowired
     ProductService productService;
 
-    @AfterEach
+    @BeforeEach
     void resetDB() {
         productRepository.deleteAll();
     }

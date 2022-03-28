@@ -2,11 +2,10 @@ package com.example.yuriy_ivanov.dto.product;
 
 import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class ProductResponse {

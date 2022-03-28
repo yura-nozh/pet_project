@@ -4,8 +4,11 @@ import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class ProductRequest {
     private Brand brand;

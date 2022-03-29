@@ -8,9 +8,6 @@ import com.example.yuriy_ivanov.entities.Product;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,21 +44,6 @@ public class ProductControllerTest {
         productRepository.deleteAll();
     }
 
-    public void generateProducts() {
-//        Random random = new Random();
-//        List<Brand> brands = Collections.unmodifiableList(Arrays.asList(Brand.values()));
-//        int brandsSize = brands.size();
-//
-//
-//        List<Object> types = Collections.unmodifiableList(Arrays.asList(Type.values()));
-//        int typesSize = types.size();
-//
-//        for(int i = 0; i < 100; i++) {
-//            int volume = 10;
-//            createProduct(brands.get(random.nextInt(brandsSize)), types.get(random.nextInt(typesSize)), volume + i, 1 + i, 1000f + (float)i);
-        }
-
-
     public Product createProduct(Brand brand, Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
         product.setBrand(brand);
@@ -86,7 +66,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void shouldReturnUSerList() throws Exception {
+    void shouldReturnUSerList() throws Exception {
         createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
         ResultActions resultActions = this.mockMvc.perform(get("/bags"));
         String result = resultActions.andReturn().getResponse().getContentAsString();
@@ -98,7 +78,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void shouldReturnProductById() throws Exception {
+    void shouldReturnProductById() throws Exception {
         Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
         ResultActions resultActions = this.mockMvc.perform(get("/bags/" + product.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();
@@ -109,7 +89,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void shouldCreateProduct() throws Exception{
+    void shouldCreateProduct() throws Exception{
         List<Product> productsBefore = productRepository.findAll();
         ProductRequest newProduct = new ProductRequest(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
 
@@ -130,7 +110,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void shouldUpdateProduct() throws Exception {
+     void shouldUpdateProduct() throws Exception {
         Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
         ProductRequest newProduct = new ProductRequest(Brand.NIKE, Type.SPORTS, 31, 11, 6000f);
         List<Product> productsBefore = productRepository.findAll();
@@ -146,11 +126,11 @@ public class ProductControllerTest {
         resultActions.andExpect(status().isOk());
         assertNotNull(result);
         assertEquals(productsBefore.size(), productsAfter.size());
-        assertProductEquals(updateProduct, productRepository.findById(product.getId()).get());
+        assertProductEquals(updateProduct, productRepository.findById(product.getId()).orElseThrow());
     }
 
     @Test
-    public void deleteProduct() throws Exception {
+    void deleteProduct() throws Exception {
         Product product = createProduct(Brand.ADIDAS, Type.SPORTS, 30, 10, 5000f);
 
         ResultActions resultActions = this.mockMvc.perform(delete("/bags/" + product.getId()));

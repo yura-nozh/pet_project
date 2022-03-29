@@ -2,7 +2,6 @@ package com.example.yuriy_ivanov.dto.line_item;
 
 import com.example.yuriy_ivanov.dto.product.ProductResponse;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

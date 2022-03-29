@@ -130,7 +130,7 @@ public class CartControllerTest {
         Product product = createProduct();
         User user = createUser("test@mail.ru");
         Cart cart = createCart(user, product);
-        Integer testQuantity = 1;
+            int testQuantity = 1;
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), testQuantity);
 
         MockHttpServletRequestBuilder requestBuilder = post("/cart/addItem")

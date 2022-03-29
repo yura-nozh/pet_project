@@ -1,7 +1,6 @@
 package com.example.yuriy_ivanov.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

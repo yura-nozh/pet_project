@@ -57,7 +57,6 @@ public class UserService {
             throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
         }
 
-        // FIXED
         User user = mapper.map(userRequest, User.class);
         user.setId(id);
         User updatedUser = userRepository.save(user);

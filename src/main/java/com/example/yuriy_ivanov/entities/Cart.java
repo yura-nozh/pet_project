@@ -1,6 +1,5 @@
 package com.example.yuriy_ivanov.entities;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

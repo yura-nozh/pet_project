@@ -25,8 +25,6 @@ public class CartController {
         CartResponse cartResponse = cartService.removeItem(cartRequest);
         return ResponseEntity.ok(cartResponse);
     }
-    //fixed as I understood the task
-    // 17.03.2022 add map item - qty json to add(rewrite) in cart
 
     @GetMapping("/showCart/{userId}")
     public ResponseEntity<CartResponse> showUserCart(@PathVariable Long userId) {

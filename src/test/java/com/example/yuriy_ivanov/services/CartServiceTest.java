@@ -104,7 +104,6 @@ public class CartServiceTest {
         Long productId = list.get(0).getProduct().getId();
 
         assertEquals(user.getId(), userId);
-        // TODO: 17.03.2022 fix error 10 to 5
         assertEquals(product.getId(), productId);
     }
 
@@ -178,6 +177,5 @@ public class CartServiceTest {
         User testUser = cartRepository.findById(testCart.getId()).orElseThrow().getUser();
 
         assertEquals(user.getId(), testUser.getId());
-
     }
 }

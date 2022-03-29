@@ -2,7 +2,6 @@ package com.example.yuriy_ivanov.entities;
 
 import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +24,6 @@ public class Product {
     @Column(nullable = false)
     private Type type;
 
-    // TODO: 17.03.2022 change to size and calculate volume for whole order
     @Column(nullable = false)
     private Integer volume; // bag volume
 

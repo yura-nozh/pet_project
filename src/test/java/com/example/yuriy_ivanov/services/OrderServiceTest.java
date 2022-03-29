@@ -11,7 +11,6 @@ import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.repositories.CartRepository;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
-import com.sun.xml.bind.v2.TODO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

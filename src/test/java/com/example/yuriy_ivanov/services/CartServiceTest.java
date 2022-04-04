@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,7 +44,7 @@ public class CartServiceTest {
     @Autowired
     BrandRepository brandRepository;
 
-    @BeforeEach
+    @AfterEach
     void resetDB() {
         userRepository.deleteAll();
         cartRepository.deleteAll();
@@ -75,10 +76,11 @@ public class CartServiceTest {
 
 
     public User createUser() {
+        Random random = new Random();
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Due");
-        user.setEmail("mail@mail.com");
+        user.setEmail("mail" + String.valueOf(random.nextInt(100)) + "@mail.ru");
         user.setPassword("qwerty");
 
         userRepository.save(user);

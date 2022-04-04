@@ -3,7 +3,6 @@ package com.example.yuriy_ivanov.services;
 import com.example.yuriy_ivanov.entities.Brand;
 import com.example.yuriy_ivanov.repositories.BrandRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

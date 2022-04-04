@@ -31,7 +31,10 @@ public class ProductService {
     public ProductResponse create(ProductRequest productRequest) {
         Product bag = objectMapper.convertValue(productRequest, Product.class);
         productRepository.save(bag);
-
+        List<Product> list = new ArrayList<>();
+        list.add(bag);
+        bag.getBrand().setProducts(list);
+        brandRepository.save(bag.getBrand());
         return objectMapper.convertValue(bag, ProductResponse.class);
     }
 

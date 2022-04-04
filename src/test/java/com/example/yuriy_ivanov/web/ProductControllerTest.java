@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +56,11 @@ class ProductControllerTest {
 
     public Product createProduct(Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
-        product.setBrand(createBrand());
+        List<Product> list= new ArrayList<>();
+        Brand brand = createBrand();
+        list.add(product);
+        brand.setProducts(list);
+        product.setBrand(brand);
         product.setType(type);
         product.setPrice(price);
         product.setCount(count);
@@ -71,7 +76,7 @@ class ProductControllerTest {
     }
 
     public void assertProductEquals(ProductResponse product1, Product product2) {
-        assertEquals(product1.getBrand(), product2.getBrand());
+        assertEquals(product1.getBrand().getId(), product2.getBrand().getId());
         assertEquals(product1.getType(), product2.getType());
         assertEquals(product1.getVolume(), product2.getVolume());
         assertEquals(product1.getCount(), product2.getCount());

@@ -49,7 +49,7 @@ public class OrderService {
             int countInRepo = productRepository.getById(lineItem.getProduct().getId()).getCount();
             int countInCart = lineItem.getQuantity();
             if (countInCart > countInRepo) {
-                throw new ServiceException("Unfortunately, there are not so many bags" + lineItem.getProduct().getBrand() + ". Reduce the quantity"
+                throw new ServiceException("Unfortunately, there are not so many bags" + lineItem.getProduct().getBrand().getBrandName() + ". Reduce the quantity"
                         , TypicalError.NOT_SO_MANY_PRODUCTS);
             }
         }

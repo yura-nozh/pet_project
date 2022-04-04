@@ -1,16 +1,14 @@
 package com.example.yuriy_ivanov.services;
 
-import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
 import com.example.yuriy_ivanov.dto.order.OrderRequest;
 import com.example.yuriy_ivanov.dto.order.OrderResponse;
-import com.example.yuriy_ivanov.entities.Cart;
-import com.example.yuriy_ivanov.entities.LineItem;
-import com.example.yuriy_ivanov.entities.Product;
-import com.example.yuriy_ivanov.entities.User;
+import com.example.yuriy_ivanov.entities.*;
+import com.example.yuriy_ivanov.repositories.BrandRepository;
 import com.example.yuriy_ivanov.repositories.CartRepository;
 import com.example.yuriy_ivanov.repositories.ProductRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,16 +36,35 @@ public class OrderServiceTest {
     @Autowired
     OrderService orderService;
 
-    public Product createProduct() {
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    BrandRepository brandRepository;
+
+    @BeforeEach
+    void resetDB() {
+        brandRepository.deleteAll();
+        userRepository.deleteAll();
+        cartRepository.deleteAll();
+        productRepository.deleteAll();
+    }
+
+    public Product createProduct(Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
-        product.setBrand(Brand.THULE);
-        product.setType(Type.BUSINESS);
-        product.setVolume(30);
-        product.setCount(10);
-        product.setPrice(5000f);
+        product.setBrand(createBrand());
+        product.setType(type);
+        product.setPrice(price);
+        product.setCount(count);
+        product.setVolume(volume);
+
         productRepository.save(product);
 
         return product;
+    }
+
+    public Brand createBrand() {
+        return brandService.addNewBrand("THULE");
     }
 
     public User createUser() {
@@ -79,7 +96,7 @@ public class OrderServiceTest {
     @Test
     public void shouldCreateOrder() {
         User user = createUser();
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         Cart cart = createCart(user, product);
         OrderRequest orderRequest = new OrderRequest(user.getId());
         Integer productListFromCart = cart.getLineItems().size();

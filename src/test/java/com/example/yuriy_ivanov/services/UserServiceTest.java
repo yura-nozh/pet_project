@@ -6,7 +6,7 @@ import com.example.yuriy_ivanov.dto.user.UserRequest;
 import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
 import com.example.yuriy_ivanov.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +30,7 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
-    @AfterEach
+    @BeforeEach
     void resetDB() {
         userRepository.deleteAll();
     }
@@ -84,7 +84,7 @@ public class UserServiceTest {
     @Transactional
     @Test
     public void shouldReturnUserById() {
-        User user = createUser("John", "Due", "mail@mail.com", "qwerty123");
+        User user = createUser("John", "Due", "mail@mk.com", "qwerty123");
         UserResponse responseUser = userService.findById(user.getId());
 
         assertUserEquals(user, responseUser);
@@ -104,7 +104,7 @@ public class UserServiceTest {
     @Transactional
     @Test
     public void shouldDeleteUser() {
-        User user = createUser("John", "Due", "mail@mail.com", "qwerty123");
+        User user = createUser("John", "Due", "mail@bk.com", "qwerty123");
         assertNotNull(userRepository.findAll());
 
         userService.delete(user.getId());

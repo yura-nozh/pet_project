@@ -1,7 +1,7 @@
 package com.example.yuriy_ivanov.dto.product;
 
-import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
+import com.example.yuriy_ivanov.entities.Brand;
 import lombok.*;
 
 @Getter

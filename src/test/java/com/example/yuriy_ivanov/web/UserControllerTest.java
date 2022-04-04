@@ -2,10 +2,12 @@ package com.example.yuriy_ivanov.web;
 
 import com.example.yuriy_ivanov.dto.user.UserResponse;
 import com.example.yuriy_ivanov.entities.User;
+import com.example.yuriy_ivanov.repositories.BrandRepository;
 import com.example.yuriy_ivanov.repositories.UserRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,8 +38,12 @@ public class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
-    @AfterEach
-    public void resetDB() {
+    @Autowired
+    BrandRepository brandRepository;
+
+    @BeforeEach
+    void resetDB() {
+        brandRepository.deleteAll();
         userRepository.deleteAll();
     }
 

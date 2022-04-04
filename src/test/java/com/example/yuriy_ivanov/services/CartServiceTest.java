@@ -2,17 +2,11 @@ package com.example.yuriy_ivanov.services;
 
 import com.example.yuriy_ivanov.dto.cart.CartRequest;
 import com.example.yuriy_ivanov.dto.cart.CartResponse;
-import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
-import com.example.yuriy_ivanov.entities.Cart;
-import com.example.yuriy_ivanov.entities.LineItem;
-import com.example.yuriy_ivanov.entities.Product;
-import com.example.yuriy_ivanov.entities.User;
-import com.example.yuriy_ivanov.repositories.CartRepository;
-import com.example.yuriy_ivanov.repositories.LineItemRepository;
-import com.example.yuriy_ivanov.repositories.ProductRepository;
-import com.example.yuriy_ivanov.repositories.UserRepository;
+import com.example.yuriy_ivanov.entities.*;
+import com.example.yuriy_ivanov.repositories.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -43,26 +37,42 @@ public class CartServiceTest {
     @Autowired
     CartService cartService;
 
-    @AfterEach
+    @Autowired
+    BrandService brandService;
+
+    @Autowired
+    BrandRepository brandRepository;
+
+    @BeforeEach
     void resetDB() {
         userRepository.deleteAll();
         cartRepository.deleteAll();
         productRepository.deleteAll();
         lineItemRepository.deleteAll();
+        brandRepository.deleteAll();
     }
 
-    public Product createProduct() {
+    public Product createProduct(Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
-        product.setBrand(Brand.THULE);
-        product.setType(Type.BUSINESS);
-        product.setVolume(30);
-        product.setCount(10);
-        product.setPrice(5000f);
+        List<Product> list= new ArrayList<>();
+        Brand brand = createBrand();
+        list.add(product);
+        brand.setProducts(list);
+        product.setBrand(brand);
+        product.setType(type);
+        product.setPrice(price);
+        product.setCount(count);
+        product.setVolume(volume);
 
         productRepository.save(product);
 
         return product;
     }
+
+    public Brand createBrand() {
+        return brandService.addNewBrand("THULE");
+    }
+
 
     public User createUser() {
         User user = new User();
@@ -71,7 +81,7 @@ public class CartServiceTest {
         user.setEmail("mail@mail.com");
         user.setPassword("qwerty");
 
-        userRepository.saveAndFlush(user);
+        userRepository.save(user);
 
         return user;
     }
@@ -93,7 +103,7 @@ public class CartServiceTest {
     @Transactional
     @Test
     public void shouldCreateCartWithFirstItem () {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), 100);
         CartResponse cartResponse = cartService.addItem(cartRequest);
@@ -110,7 +120,7 @@ public class CartServiceTest {
     @Transactional
     @Test
     public void shouldIncreaseQuantity() {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
         LineItem lineItem = lineItemRepository.findLineItemByProductId(product.getId());
@@ -130,7 +140,7 @@ public class CartServiceTest {
     @Transactional
     @Test
     public void shouldRemoveItemFromCart() {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
         Integer qty = 1;
@@ -152,7 +162,7 @@ public class CartServiceTest {
     @Transactional
     @Test
     public void shouldRemoveCart() {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
         Long cartId = cart.getId();
@@ -169,7 +179,7 @@ public class CartServiceTest {
     @Transactional
     @Test
     void shouldFindUserCart() {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
 

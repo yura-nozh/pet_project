@@ -2,18 +2,13 @@ package com.example.yuriy_ivanov.web;
 
 import com.example.yuriy_ivanov.dto.cart.CartRequest;
 import com.example.yuriy_ivanov.dto.cart.CartResponse;
-import com.example.yuriy_ivanov.dto.enums.Brand;
 import com.example.yuriy_ivanov.dto.enums.Type;
 import com.example.yuriy_ivanov.dto.line_item.LineItemResponse;
-import com.example.yuriy_ivanov.entities.Cart;
-import com.example.yuriy_ivanov.entities.LineItem;
-import com.example.yuriy_ivanov.entities.Product;
-import com.example.yuriy_ivanov.entities.User;
-import com.example.yuriy_ivanov.repositories.CartRepository;
-import com.example.yuriy_ivanov.repositories.LineItemRepository;
-import com.example.yuriy_ivanov.repositories.ProductRepository;
-import com.example.yuriy_ivanov.repositories.UserRepository;
+import com.example.yuriy_ivanov.entities.*;
+import com.example.yuriy_ivanov.repositories.*;
+import com.example.yuriy_ivanov.services.BrandService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,24 +44,41 @@ public class CartControllerTest {
     UserRepository userRepository;
 
     @Autowired
+    BrandService brandService;
+
+    @Autowired
     MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    public Product createProduct() {
+    @Autowired
+    BrandRepository brandRepository;
+
+    @BeforeEach
+    void resetDB() {
+        brandRepository.deleteAll();
+        userRepository.deleteAll();
+        cartRepository.deleteAll();
+        productRepository.deleteAll();
+    }
+
+    public Product createProduct(Type type, Integer volume, Integer count, Float price) {
         Product product = new Product();
-        product.setBrand(Brand.THULE);
-        product.setType(Type.BUSINESS);
-        product.setVolume(30);
-        product.setCount(10);
-        product.setPrice(5000f);
+        product.setBrand(createBrand());
+        product.setType(type);
+        product.setPrice(price);
+        product.setCount(count);
+        product.setVolume(volume);
 
         productRepository.save(product);
 
         return product;
     }
 
+    public Brand createBrand() {
+        return brandService.addNewBrand("THULE");
+    }
     public User createUser(String email) {
         User user = new User();
         user.setFirstName("John");
@@ -97,7 +109,7 @@ public class CartControllerTest {
     @Test
     @Transactional
     public void shouldAddNewItem() throws Exception {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test@mail.tt");
         Integer qty = 1;
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), qty);
@@ -127,7 +139,7 @@ public class CartControllerTest {
     @Test
     @Transactional
     public void shouldAddOneMoreItem() throws Exception {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test@mail.ru");
         Cart cart = createCart(user, product);
             int testQuantity = 1;
@@ -154,7 +166,7 @@ public class CartControllerTest {
     @Test
     @Transactional
     public void shouldRemoveItem() throws Exception {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);
         int size = cart.getLineItems().size();
@@ -176,7 +188,7 @@ public class CartControllerTest {
     @Test
     @Transactional
     void shouldShowUserCart() throws Exception {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test2@mail.by");
         Cart cart = createCart(user, product);
 
@@ -191,7 +203,7 @@ public class CartControllerTest {
     @Test
     @Transactional
     public void shouldRemoveCart() throws Exception {
-        Product product = createProduct();
+        Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);
 

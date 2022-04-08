@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CartControllerTest {
+class CartControllerTest {
 
     @Autowired
     CartRepository cartRepository;
@@ -108,7 +108,7 @@ public class CartControllerTest {
 
     @Test
     @Transactional
-    public void shouldAddNewItem() throws Exception {
+    void shouldAddNewItem() throws Exception {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test@mail.tt");
         Integer qty = 1;
@@ -138,7 +138,7 @@ public class CartControllerTest {
 
     @Test
     @Transactional
-    public void shouldAddOneMoreItem() throws Exception {
+    void shouldAddOneMoreItem() throws Exception {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test@mail.ru");
         Cart cart = createCart(user, product);
@@ -165,7 +165,7 @@ public class CartControllerTest {
 
     @Test
     @Transactional
-    public void shouldRemoveItem() throws Exception {
+    void shouldRemoveItem() throws Exception {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);
@@ -202,7 +202,7 @@ public class CartControllerTest {
 
     @Test
     @Transactional
-    public void shouldRemoveCart() throws Exception {
+    void shouldRemoveCart() throws Exception {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser("test2@mail.tt");
         Cart cart = createCart(user, product);

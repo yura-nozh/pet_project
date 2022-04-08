@@ -54,7 +54,7 @@ public class UserService {
 
     public UserResponse update(Long id, UserRequest userRequest) {
         if(userRepository.findById(id).isEmpty()) {
-            throw new ServiceException("User not found", TypicalError.USER_NOT_FOUND);
+            throw new ServiceException("User not exist", TypicalError.USER_NOT_FOUND);
         }
 
         User user = mapper.map(userRequest, User.class);

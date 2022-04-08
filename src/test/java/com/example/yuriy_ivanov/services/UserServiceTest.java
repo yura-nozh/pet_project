@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserServiceTest {
+class UserServiceTest {
 
     @Autowired
     UserRepository userRepository;
@@ -55,7 +55,7 @@ public class UserServiceTest {
 
     @Transactional
     @Test
-    public void shouldCreateUser() {
+    void shouldCreateUser() {
         UserRequest newUser = new UserRequest("John", "Due", "mail@mail.com", "qwerty123");
         List<User> list = userRepository.findAll();
         assertEquals(0, list.size());
@@ -72,7 +72,7 @@ public class UserServiceTest {
 
     @Transactional
     @Test
-    public void shouldReturnAllUsers() {
+    void shouldReturnAllUsers() {
         createUser("John", "Due", "mail@mail.com", "qwerty123");
         createUser("John1", "Due1", "mail@gmail.com", "qwerty321");
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.ASC, "id"));
@@ -83,7 +83,7 @@ public class UserServiceTest {
 
     @Transactional
     @Test
-    public void shouldReturnUserById() {
+    void shouldReturnUserById() {
         User user = createUser("John", "Due", "mail@mk.com", "qwerty123");
         UserResponse responseUser = userService.findById(user.getId());
 
@@ -92,7 +92,7 @@ public class UserServiceTest {
 
     @Transactional
     @Test
-    public void shouldUpdateUser() {
+    void shouldUpdateUser() {
         User user = createUser("John", "Due", "mail@mail.com", "qwerty123");
         UserRequest testUser = new UserRequest("John1", "Due2", "mail@gmail.com", "qwerty321");
         UserResponse userResponse = userService.update(user.getId(), testUser);
@@ -103,7 +103,7 @@ public class UserServiceTest {
 
     @Transactional
     @Test
-    public void shouldDeleteUser() {
+    void shouldDeleteUser() {
         User user = createUser("John", "Due", "mail@bk.com", "qwerty123");
         assertNotNull(userRepository.findAll());
 

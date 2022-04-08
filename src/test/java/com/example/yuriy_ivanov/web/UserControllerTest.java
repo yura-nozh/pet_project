@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
@@ -66,7 +66,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUserList() throws Exception {
+    void shouldReturnUserList() throws Exception {
         createUser("John", "Doe", "dr1@mail.com", "qwerty");
         ResultActions resultActions = this.mockMvc.perform(get("/users"));
         String result = resultActions.andReturn().getResponse().getContentAsString();
@@ -77,7 +77,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldReturnUserById() throws Exception {
+    void shouldReturnUserById() throws Exception {
         User user = createUser("John", "Doe", "dr1@mail.com", "qwerty");
         ResultActions resultActions = this.mockMvc.perform(get("/users/" + user.getId()));
         String result = resultActions.andReturn().getResponse().getContentAsString();
@@ -89,7 +89,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldCreateUser() throws Exception {
+    void shouldCreateUser() throws Exception {
         List<User> listBefore = userRepository.findAll();
         User testUser = new User();
         testUser.setFirstName("John");
@@ -116,7 +116,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldUpdateUser() throws Exception {
+    void shouldUpdateUser() throws Exception {
         User user = createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
         User testUser = new User();
         testUser.setFirstName("John2");
@@ -142,7 +142,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldDeleteUser() throws Exception {
+    void shouldDeleteUser() throws Exception {
         User user = createUser("John1", "Doe1", "dr1@mail.com", "qwerty1");
 
         ResultActions resultActions = this.mockMvc.perform(delete("/users/" + user.getId()));

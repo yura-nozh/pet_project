@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CartServiceTest {
+class CartServiceTest {
 
     @Autowired
     CartRepository cartRepository;
@@ -80,7 +80,7 @@ public class CartServiceTest {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Due");
-        user.setEmail("mail" + String.valueOf(random.nextInt(100)) + "@mail.ru");
+        user.setEmail("mail" + random.nextInt(100) + "@mail.ru");
         user.setPassword("qwerty");
 
         userRepository.save(user);
@@ -104,7 +104,7 @@ public class CartServiceTest {
 
     @Transactional
     @Test
-    public void shouldCreateCartWithFirstItem () {
+    void shouldCreateCartWithFirstItem () {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         CartRequest cartRequest = new CartRequest(product.getId(), user.getId(), 100);
@@ -121,7 +121,7 @@ public class CartServiceTest {
 
     @Transactional
     @Test
-    public void shouldIncreaseQuantity() {
+    void shouldIncreaseQuantity() {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
@@ -141,7 +141,7 @@ public class CartServiceTest {
 
     @Transactional
     @Test
-    public void shouldRemoveItemFromCart() {
+    void shouldRemoveItemFromCart() {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);
@@ -163,7 +163,7 @@ public class CartServiceTest {
 
     @Transactional
     @Test
-    public void shouldRemoveCart() {
+    void shouldRemoveCart() {
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         User user = createUser();
         Cart cart = createCart(user, product);

@@ -49,14 +49,14 @@ public class ProductService {
 
     public ProductResponse findById(Long id) throws ServiceException {
         Optional<Product> bag = productRepository.findById(id);
-        Product bagEntity = bag.orElseThrow(() -> new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND));
+        Product bagEntity = bag.orElseThrow(() -> new ServiceException("Product does not exist", TypicalError.PRODUCT_NOT_FOUND));
 
         return objectMapper.convertValue(bagEntity, ProductResponse.class);
     }
 
     public ProductResponse update(Long id, ProductRequest productRequest) {
         if(productRepository.findById(id).isEmpty()) {
-            throw new ServiceException("Product not found", TypicalError.PRODUCT_NOT_FOUND);
+            throw new ServiceException("This product not found", TypicalError.PRODUCT_NOT_FOUND);
         }
 
         Product bag = mapper.map(productRequest, Product.class);

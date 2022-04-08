@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderServiceTest {
+class OrderServiceTest {
 
     @Autowired
     UserRepository userRepository;
@@ -94,7 +94,7 @@ public class OrderServiceTest {
 
     @Transactional
     @Test
-    public void shouldCreateOrder() {
+    void shouldCreateOrder() {
         User user = createUser();
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         Cart cart = createCart(user, product);

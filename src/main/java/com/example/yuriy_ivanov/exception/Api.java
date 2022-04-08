@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Data
-public class ApiException {
+public class Api {
     private final String message;
     private final Throwable throwable;
     private final HttpStatus httpStatus;

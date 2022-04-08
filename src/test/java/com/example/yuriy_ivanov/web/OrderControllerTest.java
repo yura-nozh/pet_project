@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class OrderControllerTest {
+class OrderControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
@@ -105,7 +105,7 @@ public class OrderControllerTest {
 
     @Test
     @Transactional
-    public void shouldCreateOrder() throws Exception {
+    void shouldCreateOrder() throws Exception {
         User user = createUser("mail@mail.com");
         Product product = createProduct(Type.BUSINESS, 15, 5, 4500.90f);
         Cart cart = createCart(user, product);

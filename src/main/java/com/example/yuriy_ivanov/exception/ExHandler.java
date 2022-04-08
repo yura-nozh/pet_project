@@ -23,7 +23,7 @@ public class ExHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {Throwable.class})
     protected ResponseEntity<Object> handelApiException(Throwable throwable) {
         HttpStatus serverError = HttpStatus.INTERNAL_SERVER_ERROR;
-        ApiException apiException = new ApiException(throwable.getMessage(), throwable, serverError);
-        return new ResponseEntity<>(apiException, serverError);
+        Api api = new Api(throwable.getMessage(), throwable, serverError);
+        return new ResponseEntity<>(api, serverError);
     }
 }
